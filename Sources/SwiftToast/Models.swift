@@ -8,12 +8,12 @@
 import Foundation
 
 public struct Toast: Equatable {
-    var style: ToastStyle
-    var actor: String?
-    var title: String
-    var message: String
-    var duration: Double = 3
-    var width: Double = 300
+    public var style: ToastStyle
+    public var actor: String?
+    public var title: String
+    public var message: String
+    public var duration: Double = 3
+    public var width: Double = 300
 }
 
 public enum ToastStyle: String {
