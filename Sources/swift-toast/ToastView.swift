@@ -141,6 +141,6 @@ struct ToastView: View {
 
 struct ToastView_Previews: PreviewProvider {
     static var previews: some View {
-        ToastView(toast: Toast(style: .message, actor: "davidhamash", title: "[SLC FC] Goonies Squad", message: "No internet connection")).environmentObject(SessionStore())
+        ToastView(toast: Toast(style: .message, actor: "johndoe", title: "test title", message: "test message"))
     }
 }

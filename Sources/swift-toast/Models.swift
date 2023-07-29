@@ -13,7 +13,7 @@ struct Toast: Equatable {
     var title: String
     var message: String
     var duration: Double = 3
-    var width: Double = SCREEN_WIDTH
+    var width: Double = 300
 }
 
 enum ToastStyle: String {
