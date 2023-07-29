@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ToastViewModifier: ViewModifier {
+public struct ToastViewModifier: ViewModifier {
     
     @Binding var isPresented: Bool
     @Binding var toast: Toast
@@ -18,7 +18,7 @@ struct ToastViewModifier: ViewModifier {
         case bottom
     }
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         switch toast.style {
         case .error:
             return content

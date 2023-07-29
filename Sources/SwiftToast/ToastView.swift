@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct ToastView: View {
+public struct ToastView: View {
     
     @State var toast: Toast
     
-    var body: some View {
+    public var body: some View {
         HStack(alignment: .center) {
             switch toast.style {
             case .error:

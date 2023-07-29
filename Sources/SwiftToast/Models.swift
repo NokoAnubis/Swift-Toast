@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Toast: Equatable {
+public struct Toast: Equatable {
     var style: ToastStyle
     var actor: String?
     var title: String
@@ -16,7 +16,7 @@ struct Toast: Equatable {
     var width: Double = 300
 }
 
-enum ToastStyle: String {
+public enum ToastStyle: String {
     case error = "error"
     case warning = "warning"
     case success = "success"
