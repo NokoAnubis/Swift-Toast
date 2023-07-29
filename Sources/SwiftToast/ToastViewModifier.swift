@@ -211,7 +211,7 @@ public struct ToastViewModifier: ViewModifier {
 
 extension View {
 
-    func toast(isPresented: Binding<Bool>, toast: Binding<Toast>) -> some View {
+    public func toast(isPresented: Binding<Bool>, toast: Binding<Toast>) -> some View {
         self.modifier(ToastViewModifier(isPresented: isPresented, toast: toast))
     }
 }
