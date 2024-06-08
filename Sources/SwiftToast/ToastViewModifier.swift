@@ -11,80 +11,11 @@ import Foundation
 public struct ToastViewModifier: ViewModifier {
     
     @Binding var isPresented: Bool
-    @Binding var toast: Toast
-    
-    enum DisplayPosition {
-        case top
-        case bottom
-    }
+    var position: DisplayPosition
     
     public func body(content: Content) -> some View {
-        switch toast.style {
-        case .error:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .bottom) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .warning:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .bottom) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .success:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .bottom) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .info:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .bottom) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .newPost:
+        switch position {
+        case .top:
             return content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .top) {
@@ -100,42 +31,10 @@ public struct ToastViewModifier: ViewModifier {
                             }
                         }
                 }
-        case .message:
+        case .bottom:
             return content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .top) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .newEvent:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .top) {
-                    ToastViewer()
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                }
-        case .eventStatus:
-            return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(alignment: .top) {
+                .overlay(alignment: .bottom) {
                     ToastViewer()
                         .onChange(of: isPresented) { newValue in
                             guard newValue == true else {
@@ -149,59 +48,40 @@ public struct ToastViewModifier: ViewModifier {
                         }
                 }
         }
-        
     }
     
     @ViewBuilder func ToastViewer() -> some View {
         if isPresented {
-            switch toast.style {
-            case .error:
+            switch position {
+            case .top:
                 withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: -20)
-                        .transition(.offset(y: 1000))
+                    ToastView {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(.white)
+                            Text("Message")
+                                .foregroundColor(.white)
+                        }
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .offset(y: 15)
+                    .transition(.offset(y: -1000))
                 }
-            case .warning:
+            case .bottom:
                 withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: -20)
-                        .transition(.offset(y: 1000))
-                }
-            case .success:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: -20)
-                        .transition(.offset(y: 1000))
-                }
-            case .info:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: -20)
-                        .transition(.offset(y: 1000))
-                }
-            case .newPost:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: 15)
-                        .transition(.offset(y: -1000))
-                }
-            case .message:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: 15)
-                        .transition(.offset(y: -1000))
-                }
-            case .newEvent:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: 15)
-                        .transition(.offset(y: -1000))
-                }
-            case .eventStatus:
-                withAnimation {
-                    ToastView(toast: toast)
-                        .offset(y: 15)
-                        .transition(.offset(y: -1000))
+                    ToastView {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle")
+                                .foregroundColor(.white)
+                            Text("Message")
+                                .foregroundColor(.white)
+                        }
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .offset(y: -20)
+                    .transition(.offset(y: 1000))
                 }
             }
         }
@@ -211,7 +91,7 @@ public struct ToastViewModifier: ViewModifier {
 
 extension View {
 
-    public func toast(isPresented: Binding<Bool>, toast: Binding<Toast>) -> some View {
-        self.modifier(ToastViewModifier(isPresented: isPresented, toast: toast))
+    public func toast(isPresented: Binding<Bool>, position: DisplayPosition) -> some View {
+        self.modifier(ToastViewModifier(isPresented: isPresented, position: position))
     }
 }
