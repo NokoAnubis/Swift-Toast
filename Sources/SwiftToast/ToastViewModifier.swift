@@ -21,38 +21,38 @@ public struct ToastViewModifier: ViewModifier {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .top) {
                     AnyView(toastContent())
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                        .onTapGesture {
+                }
+                .onChange(of: isPresented) { newValue in
+                    guard newValue == true else {
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation(.easeInOut) {
                             isPresented = false
                         }
+                    }
+                }
+                .onTapGesture {
+                    isPresented = false
                 }
         case .bottom:
             return content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottom) {
                     AnyView(toastContent())
-                        .onChange(of: isPresented) { newValue in
-                            guard newValue == true else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                withAnimation(.easeInOut) {
-                                    isPresented = false
-                                }
-                            }
-                        }
-                        .onTapGesture {
+                }
+                .onChange(of: isPresented) { newValue in
+                    guard newValue == true else {
+                        return
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation(.easeInOut) {
                             isPresented = false
                         }
+                    }
+                }
+                .onTapGesture {
+                    isPresented = false
                 }
         }
     }
