@@ -39,7 +39,7 @@ public struct ToastViewModifier: ViewModifier {
             return content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottom) {
-                    AnyView(toastContent())
+                    isPresented ? AnyView(toastContent()) : AnyView(EmptyView())
                 }
                 .onChange(of: isPresented) { newValue in
                     guard newValue == true else {
