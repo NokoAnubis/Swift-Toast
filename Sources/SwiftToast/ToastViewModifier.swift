@@ -31,6 +31,9 @@ public struct ToastViewModifier: ViewModifier {
                                 }
                             }
                         }
+                        .onTapGesture {
+                            isPresented = false
+                        }
                 }
         case .bottom:
             return content
@@ -46,6 +49,9 @@ public struct ToastViewModifier: ViewModifier {
                                     isPresented = false
                                 }
                             }
+                        }
+                        .onTapGesture {
+                            isPresented = false
                         }
                 }
         }
