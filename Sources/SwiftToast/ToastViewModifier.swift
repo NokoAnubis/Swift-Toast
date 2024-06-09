@@ -20,7 +20,7 @@ public struct ToastViewModifier: ViewModifier {
             return content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .top) {
-                    AnyView(toastContent())
+                    isPresented ? AnyView(toastContent()) : AnyView(EmptyView())
                 }
                 .onChange(of: isPresented) { newValue in
                     guard newValue == true else {
@@ -29,11 +29,13 @@ public struct ToastViewModifier: ViewModifier {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                         withAnimation(.easeInOut) {
                             isPresented = false
+                            toastContent = { EmptyView() }
                         }
                     }
                 }
                 .onTapGesture {
                     isPresented = false
+                    toastContent = { EmptyView() }
                 }
         case .bottom:
             return content
@@ -48,11 +50,13 @@ public struct ToastViewModifier: ViewModifier {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                         withAnimation(.easeInOut) {
                             isPresented = false
+                            toastContent = { EmptyView() }
                         }
                     }
                 }
                 .onTapGesture {
                     isPresented = false
+                    toastContent = { EmptyView() }
                 }
         }
     }
