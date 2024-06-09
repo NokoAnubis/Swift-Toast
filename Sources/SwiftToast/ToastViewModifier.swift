@@ -14,6 +14,32 @@ public struct ToastViewModifier: ViewModifier {
     @Binding var position: DisplayPosition
     @Binding var toastContent: () -> any View
     
+    @State private var timerWorkItem: DispatchWorkItem?
+    var delay: TimeInterval = 4.0
+    
+    private func hideToast() {
+        isPresented = false
+        toastContent = { EmptyView() }
+    }
+    
+    private func resetTimer() {
+         // Cancel the previous work item if it exists
+         timerWorkItem?.cancel()
+         
+         // Create a new DispatchWorkItem
+         let workItem = DispatchWorkItem {
+             withAnimation(.easeInOut) {
+                 hideToast()
+             }
+         }
+         
+         // Assign the new work item
+         timerWorkItem = workItem
+         
+         // Dispatch the work item after the delay
+         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+     }
+    
     public func body(content: Content) -> some View {
         switch position {
         case .top:
@@ -26,16 +52,10 @@ public struct ToastViewModifier: ViewModifier {
                     guard newValue == true else {
                         return
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                        withAnimation(.easeInOut) {
-                            isPresented = false
-                            toastContent = { EmptyView() }
-                        }
-                    }
+                    resetTimer()
                 }
                 .onTapGesture {
-                    isPresented = false
-                    toastContent = { EmptyView() }
+                    hideToast()
                 }
         case .bottom:
             return content
@@ -47,16 +67,10 @@ public struct ToastViewModifier: ViewModifier {
                     guard newValue == true else {
                         return
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                        withAnimation(.easeInOut) {
-                            isPresented = false
-                            toastContent = { EmptyView() }
-                        }
-                    }
+                    resetTimer()
                 }
                 .onTapGesture {
-                    isPresented = false
-                    toastContent = { EmptyView() }
+                    hideToast()
                 }
         }
     }
