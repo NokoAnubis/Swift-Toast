@@ -16,4 +16,9 @@ public enum DisplayPosition {
 public struct ToastContent {
     let view: () -> any View
     let url: URL?
+    
+    public init(view: @escaping () -> any View, url: URL?=nil) {
+        self.view = view
+        self.url = url
+    }
 }
