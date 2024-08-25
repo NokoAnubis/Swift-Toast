@@ -12,7 +12,8 @@ public struct ToastViewModifier: ViewModifier {
     
     @Binding var isPresented: Bool
     @Binding var position: DisplayPosition
-    @Binding var toastContent: () -> any View
+    @Binding var toastContent: ToastContent
+    @Environment(\.openURL) private var openURL
     
     var delay: TimeInterval = 4.0
     
@@ -42,10 +43,12 @@ public struct ToastViewModifier: ViewModifier {
         switch position {
         case .top:
             return content
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .top) {
                     Group {
                         if isPresented {
-                            AnyView(toastContent())
+                            AnyView(toastContent.view())
+                                .zIndex(10)
                         }
                     }
                 }
@@ -56,14 +59,19 @@ public struct ToastViewModifier: ViewModifier {
                     resetTimer()
                 }
                 .onTapGesture {
+                    if let url = toastContent.url {
+                        openURL(url)
+                    }
                     hideToast()
                 }
         case .bottom:
             return content
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottom) {
                     Group {
                         if isPresented {
-                            AnyView(toastContent())
+                            AnyView(toastContent.view())
+                                .zIndex(10)
                         }
                     }
                 }
@@ -74,6 +82,9 @@ public struct ToastViewModifier: ViewModifier {
                     resetTimer()
                 }
                 .onTapGesture {
+                    if let url = toastContent.url {
+                        openURL(url)
+                    }
                     hideToast()
                 }
         }
@@ -81,7 +92,7 @@ public struct ToastViewModifier: ViewModifier {
 }
 
 extension View {
-    public func toast(isPresented: Binding<Bool>, position: Binding<DisplayPosition>, content: Binding<() -> any View>) -> some View {
+    public func toast(isPresented: Binding<Bool>, position: Binding<DisplayPosition>, content: Binding<ToastContent>) -> some View {
         self.modifier(ToastViewModifier(isPresented: isPresented, position: position, toastContent: content))
     }
 }
