@@ -14,12 +14,12 @@ public struct ToastViewModifier: ViewModifier {
     @Binding var position: DisplayPosition
     @Binding var toastContent: () -> any View
     
-    @State private var timerWorkItem: DispatchWorkItem?
     var delay: TimeInterval = 4.0
+    
+    @State private var timerWorkItem: DispatchWorkItem?
     
     private func hideToast() {
         isPresented = false
-        toastContent = { EmptyView() }
     }
     
     private func resetTimer() {
@@ -28,9 +28,7 @@ public struct ToastViewModifier: ViewModifier {
          
          // Create a new DispatchWorkItem
          let workItem = DispatchWorkItem {
-             withAnimation(.easeInOut) {
-                 hideToast()
-             }
+             hideToast()
          }
          
          // Assign the new work item
@@ -44,9 +42,12 @@ public struct ToastViewModifier: ViewModifier {
         switch position {
         case .top:
             return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .top) {
-                    isPresented ? AnyView(toastContent()) : AnyView(EmptyView())
+                    Group {
+                        if isPresented {
+                            AnyView(toastContent())
+                        }
+                    }
                 }
                 .onChange(of: isPresented) { newValue in
                     guard newValue == true else {
@@ -59,9 +60,12 @@ public struct ToastViewModifier: ViewModifier {
                 }
         case .bottom:
             return content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottom) {
-                    isPresented ? AnyView(toastContent()) : AnyView(EmptyView())
+                    Group {
+                        if isPresented {
+                            AnyView(toastContent())
+                        }
+                    }
                 }
                 .onChange(of: isPresented) { newValue in
                     guard newValue == true else {
@@ -77,7 +81,6 @@ public struct ToastViewModifier: ViewModifier {
 }
 
 extension View {
-
     public func toast(isPresented: Binding<Bool>, position: Binding<DisplayPosition>, content: Binding<() -> any View>) -> some View {
         self.modifier(ToastViewModifier(isPresented: isPresented, position: position, toastContent: content))
     }
